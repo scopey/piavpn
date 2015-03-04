@@ -1,0 +1,27 @@
+#!/bin/bash
+
+OIFS=$IFS
+IFS=$'\n'
+COUNT=0
+
+files=($(find ~/vpn -type f -name "*.ovpn" | sort ))
+for item in ${files[*]}
+do
+  printf $COUNT
+  printf "  "
+  echo $item | cut -d / -f5
+  COUNT=`expr $COUNT + 1`
+done
+
+echo "Select the file you wish to use, followed by [ENTER]: "
+
+read SELECTED_FILE
+
+NEW_CURRENT=${files[$SELECTED_FILE]}
+
+echo $NEW_CURRENT
+
+rm ~/vpn/current.conf
+ln -s $NEW_CURRENT ~/vpn/current.conf
+
+IFS=$OIFS

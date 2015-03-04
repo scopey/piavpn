@@ -48,7 +48,7 @@ list_config_files()
 
 list_current_config()
 {
-  CURRENT_CONFIG=`ls -l $VPN_CONF_DIR | grep current.conf | awk '{print $11}'`
+  CURRENT_CONFIG=`ls -l $VPN_CONF_DIR | grep current.conf | awk '{print $11}' | cut -d / -f5 ` 
   echo "The current config file is: " $CURRENT_CONFIG
 }
 
@@ -109,23 +109,21 @@ stop)	check_openvpn_running
 	fi
 	;;	  
 
+list)	list_config_files
+	list_current_config
+	;;
+
+status)  check_openvpn_running
+
+	if [ $PROC_ID -ne "0" ]; then
+  	  echo "OpenVpn is running.  Process ID is: " $PROC_ID
+	else
+  	  echo "OpenVPN is not running.  No process found"
+	fi
+	;;
 
 *)	echo "Not a valid argument"
 	display_help
 	;;
 esac	
-
-#list_config_files
-#list_current_config
-
-#check_openvpn_running
-
-#if [ $PROC_ID -ne "0" ]; then
-#  echo "OpenVpn is running.  Process ID is: " $PROC_ID
-#  exit 1
-#else
-#  echo "Starting OpenVPN"
-#  start_openvpn
-#fi
-
 

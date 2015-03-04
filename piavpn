@@ -7,7 +7,7 @@
 ID_FILE="user.txt"
 VPN_CONF_DIR="/home/pi/vpn"
 CONFIG_FILE="current.conf"
-ADD_FLAGS=""
+ADD_FLAGS="--script-security 2 --up '$VPN_CONF_DIR/update-resolv-conf' --down '$VPN_CONF_DIR/update-resolv-conf'"
 
 ### Functions start here
 

@@ -1,13 +1,15 @@
 #!/bin/bash
 
-####
+#############################
 # Set the following variables
-####
+#############################
 
 ID_FILE="user.txt"
 VPN_CONF_DIR="/home/pi/vpn"
+CONFIG_FILE="current.conf"
+ADD_FLAGS=""
 
-# Function to see if OpenVPN is already running
+### Functions start here
 
 check_openvpn_running()
 {
@@ -19,10 +21,9 @@ check_openvpn_running()
   fi
 }
 
-# Function to start OpenVPN
 start_openvpn()
 {
-  openvpn --cd $VPN_CONF_DIR --config current.conf --auth-user-pass $ID_FILE --keepalive 10 60 --auth-nocache --daemon
+  openvpn --cd $VPN_CONF_DIR --config current.conf --auth-user-pass $ID_FILE --keepalive 10 60 --auth-nocache --daemon $ADD_FLAGS
 }
 
 list_config_files()
@@ -31,7 +32,7 @@ list_config_files()
   IFS=$'\n'
   local COUNT=1
   echo "Avaliable Config files are listed below"
-  for file in `find . -type f -name "*.ovpn" | sort ` 
+  for file in `find $VPN_CONF_DIR -type f -name "*.ovpn" | sort ` 
   do 
     filename=$(basename $file)
     echo $COUNT $filename 
@@ -42,12 +43,43 @@ list_config_files()
 
 list_current_config()
 {
-  CURRENT_CONFIG=`ls -l | grep current.conf | awk '{print $11}'`
+  CURRENT_CONFIG=`ls -l $VPN_CONF_DIR | grep current.conf | awk '{print $11}'`
   echo "The current config file is: " $CURRENT_CONFIG
 }
 
-## Main script
+check_if_sudo()
+{
+  if [[ $EUID -ne 0 ]]; then
+    echo "This script needs sudo.  Try sudo piavpn <args> "
+    exit 1
+fi
+}
 
+display_help()
+{
+cat <<EOF
+  
+Usage: sudo piavpn <args>
+Args : start|stop|list|change|status
+
+start	Connect to PIA
+stop	Disconnect from PIA
+list	List all PIA config files
+change	Select a new PIA server
+status	See if you are connected to PIA
+
+EOF
+}
+
+#### Main script
+
+check_if_sudo
+
+if [ $# -eq 0 ]
+then
+  display_help
+  exit
+fi
 
 list_config_files
 list_current_config

@@ -26,6 +26,11 @@ start_openvpn()
   openvpn --cd $VPN_CONF_DIR --config current.conf --auth-user-pass $ID_FILE --keepalive 10 60 --auth-nocache --daemon $ADD_FLAGS
 }
 
+stop_openvpn()
+{
+  killall openvpn
+}
+  
 list_config_files()
 {
   OIFS=$IFS
@@ -58,8 +63,8 @@ fi
 display_help()
 {
 cat <<EOF
-  
-Usage: sudo piavpn <args>
+
+Usage sudo $0 <args> 
 Args : start|stop|list|change|status
 
 start	Connect to PIA
@@ -81,17 +86,46 @@ then
   exit
 fi
 
-list_config_files
-list_current_config
+case "$1" in 
 
-check_openvpn_running
+start)	check_openvpn_running 
 
-if [ $PROC_ID -ne "0" ]; then
-  echo "OpenVpn is running.  Process ID is: " $PROC_ID
-  exit 1
-else
-  echo "Starting OpenVPN"
-  start_openvpn
-fi
+	if [ $PROC_ID -ne "0" ]; then
+  	  echo "OpenVpn is already running.  Process ID is: " $PROC_ID
+  	  exit 1
+	else
+  	  echo "Starting OpenVPN"
+          start_openvpn
+	fi
+	;;
+
+stop)	check_openvpn_running	
+	if [ $PROC_ID -eq 0 ]; then
+  	  echo "OpenVPN is not running."
+	  exit 1
+	else
+	  echo "Shutting down OpenVPN"
+	  stop_openvpn
+	fi
+	;;	  
+
+
+*)	echo "Not a valid argument"
+	display_help
+	;;
+esac	
+
+#list_config_files
+#list_current_config
+
+#check_openvpn_running
+
+#if [ $PROC_ID -ne "0" ]; then
+#  echo "OpenVpn is running.  Process ID is: " $PROC_ID
+#  exit 1
+#else
+#  echo "Starting OpenVPN"
+#  start_openvpn
+#fi
 
 

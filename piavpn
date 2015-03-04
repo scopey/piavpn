@@ -1,0 +1,65 @@
+#!/bin/bash
+
+####
+# Set the following variables
+####
+
+ID_FILE="user.txt"
+VPN_CONF_DIR="/home/pi/vpn"
+
+# Function to see if OpenVPN is already running
+
+check_openvpn_running()
+{
+  VPN_CHECK=`ps -eaf | grep openvpn | grep -v grep | wc -l `
+  if [ $VPN_CHECK -ne 0 ]; then 
+    PROC_ID=`pgrep openvpn` 
+  else
+    PROC_ID=0
+  fi
+}
+
+# Function to start OpenVPN
+start_openvpn()
+{
+  openvpn --cd $VPN_CONF_DIR --config current.conf --auth-user-pass $ID_FILE --keepalive 10 60 --auth-nocache --daemon
+}
+
+list_config_files()
+{
+  OIFS=$IFS
+  IFS=$'\n'
+  local COUNT=1
+  echo "Avaliable Config files are listed below"
+  for file in `find . -type f -name "*.ovpn" | sort ` 
+  do 
+    filename=$(basename $file)
+    echo $COUNT $filename 
+    COUNT=`expr $COUNT + 1`
+  done
+  IFS=$OIFS
+}
+
+list_current_config()
+{
+  CURRENT_CONFIG=`ls -l | grep current.conf | awk '{print $11}'`
+  echo "The current config file is: " $CURRENT_CONFIG
+}
+
+## Main script
+
+
+list_config_files
+list_current_config
+
+check_openvpn_running
+
+if [ $PROC_ID -ne "0" ]; then
+  echo "OpenVpn is running.  Process ID is: " $PROC_ID
+  exit 1
+else
+  echo "Starting OpenVPN"
+  start_openvpn
+fi
+
+

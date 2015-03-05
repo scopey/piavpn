@@ -61,7 +61,10 @@ list_current_config()
 check_if_sudo()
 {
   if [[ $EUID -ne 0 ]]; then
-    echo "This script needs sudo.  Try sudo piavpn <args> "
+    echo "" 
+    echo "This argument requires root.  Try sudo piavpn <args> "
+    display_help
+    exit
 fi
 }
 
@@ -114,17 +117,16 @@ change_vpn_server()
 
 #### Main script
 
-check_if_sudo
-
 if [ $# -eq 0 ]
 then
   display_help
-  exit
+  exit 
 fi
 
 case "$1" in 
 
-start)	check_openvpn_running 
+start)  check_if_sudo	
+	check_openvpn_running 
 
 	if [ $PROC_ID -ne "0" ]; then
   	  echo "OpenVpn is already running.  Process ID is: " $PROC_ID
@@ -135,7 +137,8 @@ start)	check_openvpn_running
 	fi
 	;;
 
-stop)	check_openvpn_running	
+stop)	check_if_sudo	
+	check_openvpn_running	
 	if [ $PROC_ID -eq 0 ]; then
   	  echo "OpenVPN is not running."
 	  exit 1

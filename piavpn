@@ -56,7 +56,6 @@ check_if_sudo()
 {
   if [[ $EUID -ne 0 ]]; then
     echo "This script needs sudo.  Try sudo piavpn <args> "
-    exit 1
 fi
 }
 

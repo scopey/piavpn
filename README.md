@@ -37,14 +37,18 @@ a) pick a directory you want to store all the files in.  It does not have to be
 /etc/openvpn  The script uses /home/pi/vpn, but you can modify it to your preferences
 
 b) extract all the .opvn files to this directory
+
 c) copy or mv your  ca.crt and crl.pem file into the same directory
+
 d) create a file called user.txt.  In this file put ONLY the following information:
 Your PIA Username
+
 Your PIA Password
 
 Example:
 
 p777777777
+
 E@38sar7ee
 
 Nothing else.. just two lines... one is your user id, the other your password

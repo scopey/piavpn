@@ -7,6 +7,16 @@
 ID_FILE="user.txt"
 VPN_CONF_DIR="/home/pi/vpn"
 CONFIG_FILE="current.conf"
+############################
+# The next line adds the flags that allow PIA to use their DNS servers and not yours
+# This avoids a lot of DNS leakage, however if you want to use your own DNS and
+# avoid having PIA change your DNS, then simply uncommnet the ADD_FLAGS="" line and comment the other ADD_FLAGS
+#
+# If you want to add additional flags in, you can just add them to the ADD_FLAGS line below
+############################
+
+#ADD_FLAGS=""
+
 ADD_FLAGS="--script-security 2 --up '$VPN_CONF_DIR/update-resolv-conf' --down '$VPN_CONF_DIR/update-resolv-conf'"
 
 #########################################################

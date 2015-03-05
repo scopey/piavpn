@@ -9,6 +9,12 @@ VPN_CONF_DIR="/home/pi/vpn"
 CONFIG_FILE="current.conf"
 ADD_FLAGS="--script-security 2 --up '$VPN_CONF_DIR/update-resolv-conf' --down '$VPN_CONF_DIR/update-resolv-conf'"
 
+#########################################################
+# You shoud not need to change anything below this box
+# However if you do, then I assume you know exactly what
+# you are doing and don't need further guidance
+#########################################################
+
 ### Functions start here
 
 check_openvpn_running()
@@ -23,7 +29,7 @@ check_openvpn_running()
 
 start_openvpn()
 {
-  openvpn --cd $VPN_CONF_DIR --config current.conf --auth-user-pass $ID_FILE --keepalive 10 60 --auth-nocache --daemon $ADD_FLAGS
+  openvpn --cd $VPN_CONF_DIR --config $CONFIG_FILE --auth-user-pass $ID_FILE --keepalive 10 60 --auth-nocache --daemon $ADD_FLAGS
 }
 
 stop_openvpn()

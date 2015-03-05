@@ -76,6 +76,37 @@ status	See if you are connected to PIA
 EOF
 }
 
+change_vpn_server()
+{
+  OIFS=$IFS
+  IFS=$'\n'
+  local COUNT=0
+
+  files=($(find $VPN_CONF_DIR -type f -name "*.ovpn" | sort ))
+  for item in ${files[*]}
+  do
+    printf $COUNT
+    printf "  "
+    echo $item | cut -d / -f5
+    COUNT=`expr $COUNT + 1`
+  done
+
+  echo "Select the file you wish to use, followed by [ENTER]: "
+
+  read SELECTED_FILE
+
+  NEW_CURRENT=${files[$SELECTED_FILE]}
+
+  echo $NEW_CURRENT
+
+  rm $VPN_CONF_DIR/current.conf
+  ln -s $NEW_CURRENT $VPN_CONF_DIR/current.conf
+
+  IFS=$OIFS
+
+}
+
+
 #### Main script
 
 check_if_sudo
@@ -111,6 +142,9 @@ stop)	check_openvpn_running
 
 list)	list_config_files
 	list_current_config
+	;;
+
+change) change_vpn_server
 	;;
 
 status)  check_openvpn_running

@@ -1,5 +1,6 @@
 # piavpn
 Raspberry Pi script for Private Internet Access VPN Service
+RPi as a Client
 
 I love the PIA Service
 

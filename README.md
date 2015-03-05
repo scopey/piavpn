@@ -53,7 +53,9 @@ E@38sar7ee
 
 Nothing else.. just two lines... one is your user id, the other your password
 
-e) Place piavpn anywhere you like.  I put mine in /usr/local/bin.  Make sure you
+e) Make sure the user.txt file has 0400 perms, otherwise OpenVPN likely will not start
+
+f) Place piavpn anywhere you like.  I put mine in /usr/local/bin.  Make sure you
 have execute (x) perms set
 
 If all goes well, you should be able to use the script.  Make sure the first few
